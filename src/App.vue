@@ -71,49 +71,33 @@
 </template>
 
 <script>
-import UserApi from "@/services/UserApi"
 
 export default {
   name: 'App',
 
   created() {
-    this.fetchUsers();
+    this.$store.dispatch('fetchUsers');
   },
 
   components: {
   },
 
-  data: () => ({
-    users: []
-  }),
-
   methods: {
-    fetchUsers() {
-      UserApi.getUsers().then((list => {
-        this.users = list;
-      }));
-    },
+
     randomizeNickname(userId) {
       const nicknames = [
         'Fluffy', 'X-Ray', 'Donkey', 'Shrubbery', 'Stanley', 'Doctor Dry'
       ];
       let newNickname = nicknames[Math.floor(Math.random() * Math.floor(nicknames.length))];
-      console.log(newNickname);
-      UserApi.changeNickname(userId, newNickname).then(user => {
-        console.log('New user: ' + user);
+      this.$store.dispatch('updateUserNickname', { userId: userId, nickname: newNickname });
+    }
+  },
 
-        // As a student you are probable not handling the response here !
-        // We could actually do this:
-        let index = this.users.findIndex(u => u.id === user.id);
-
-        // Due to limitations in JavaScript,
-        // Vue cannot detect the following changes to an array:
-        // this.users[index] = user;
-
-        // This does work !!!!        
-        this.$set(this.users, index, user);
-      })
+  computed: {
+    users() {
+      return this.$store.getters.users;
     }
   }
+
 };
 </script>
