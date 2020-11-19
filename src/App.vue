@@ -101,6 +101,17 @@ export default {
       console.log(newNickname);
       UserApi.changeNickname(userId, newNickname).then(user => {
         console.log('New user: ' + user);
+
+        // As a student you are probable not handling the response here !
+        // We could actually do this:
+        let index = this.users.findIndex(u => u.id === user.id);
+
+        // Due to limitations in JavaScript,
+        // Vue cannot detect the following changes to an array:
+        // this.users[index] = user;
+
+        // This does work !!!!        
+        this.$set(this.users, index, user);
       })
     }
   }
